@@ -15,6 +15,7 @@
     "nodemon": "^2.0.22"
   },
   "dependencies": {
-    "puppeteer": "^19.9.0"
+    "puppeteer": "^19.9.0",
+    "puppeteer-cluster": "^0.23.0"
   }
 }
