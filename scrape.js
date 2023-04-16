@@ -51,7 +51,13 @@ async function scrape() {
         for (const itemHandle of itemsHandles) {
 
             try {
-                const name = await page.evaluate(el => el.querySelector("h3").textContent, itemHandle);
+                let name = await page.evaluate(el => el.querySelector("h3").textContent, itemHandle);
+
+                if (name.includes("Knives"))
+                    name = "Knife"
+                else if (name.includes("Gloves"))
+                    name = "Gloves"
+
                 if (!name) return;
 
                 const imageURL = await page.evaluate(el => el.querySelector("a > .img-responsive").getAttribute("src"), itemHandle) || DEFAULT_ITEM_IMAGEURL;
@@ -67,7 +73,7 @@ async function scrape() {
                 })
 
                 const price = (await page.evaluate(el => el.querySelector(".price > p > a").textContent, itemHandle));
-                const convertedPrice = +(parseFloat(price.split(" ")[price.split(" ").length - 1].replaceAll(",", ".")) * EURO_TO_PLN).toFixed(2);
+                const convertedPrice = +(parseFloat(price.split(" ")[price.split(" ").length - 1].replaceAll(",", ".")) * EURO_TO_PLN).toFixed();
 
                 for (const item of items) {
                     if (item.name === name) {
@@ -94,6 +100,8 @@ async function scrape() {
         cluster.queue(link);
     }
 
+    //cluster.queue(links[0]);
+
     await cluster.idle();
     await cluster.close();
 
@@ -102,4 +110,4 @@ async function scrape() {
 
 }
 
-scrape();
+scrape()
